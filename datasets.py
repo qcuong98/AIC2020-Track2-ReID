@@ -12,51 +12,13 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torch.utils.data.sampler import BatchSampler
 
-
-class NormalDataset(Dataset):
-    def __init__(self, root_dir, vehicle_csv, label_json, transform=None):
+class ImageFolderDataset(Dataset):
+    def __init__(self, root_dir, image_names, labels, transform=None):
         self.root_dir = root_dir
         self.transform = transform
-
-        self.image_names = []
-        self.labels = []
-
-        with open(label_json, 'r') as json_file:
-            data_dict = json.load(json_file)
-
-        with open(vehicle_csv, 'r') as csv_file:
-            csv_reader = csv.reader(csv_file)
-            header = next(csv_reader)
-            for row in csv_reader:
-                vehicle_id = row[0]
-                for cam_id in data_dict[vehicle_id]:
-                    self.image_names += [image_name for image_name in data_dict[vehicle_id][cam_id]]
-                    self.labels += [int(vehicle_id) for image_name in data_dict[vehicle_id][cam_id]]
-                    
-    def __getitem__(self, idx):
-        image = Image.open(os.path.join(self.root_dir, self.image_names[idx]))
-        label = self.labels[idx]
-        if self.transform is not None:
-            image = self.transform(image)
-        return image, label
+        self.image_names = image_names
+        self.labels = labels
         
-    def __len__(self):
-        return len(self.image_names)
-    
-class EvalDataset(Dataset):
-    def __init__(self, root_dir, vehicle_csv, transform=None):
-        self.root_dir = root_dir
-        self.transform = transform
-        self.image_names = []
-        self.labels = []
-        with open(vehicle_csv, 'r') as csv_file:
-            csv_reader = csv.reader(csv_file)
-            header = next(csv_reader)
-            for row in csv_reader:
-                image_name, vehicle_id = row
-                self.image_names.append(image_name)
-                self.labels.append(int(vehicle_id))
-                    
     def __getitem__(self, idx):
         image = Image.open(os.path.join(self.root_dir, self.image_names[idx]))
         label = self.labels[idx]
