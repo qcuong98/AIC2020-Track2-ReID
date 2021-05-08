@@ -3,6 +3,10 @@ This repository is my attempt for learning and using Triplet Loss in PyTorch for
 
 All experiments are implemented inside Jupyter Notebook files.
 
+
+## Weight files
+[Google Drive](https://drive.google.com/drive/folders/1Zlzjgv2sKlkG2VwowXwyXhPkkf8cUCmK)
+
 ## Credit
 [Triplet Loss](https://github.com/adambielski/siamese-triplet)
 
